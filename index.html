@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Proyectos de Inversión</title>
+    <title>Dashboard Equipo UTL Senador Leon Fredy Muñoz</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
@@ -36,15 +36,13 @@
             margin-bottom: 20px;
         }
         header h1 {
-            color: var(--primary-color);
-            font-size: 2.5em;
-            margin: 0 0 10px 0;
-        }
-        header h2 {
             color: var(--secondary-color);
-            font-size: 1.5em;
             margin: 0;
         }
+        header h1 .highlight {
+            color: var(--primary-color);
+        }
+        
         .filters {
             background-color: var(--card-bg-color);
             padding: 20px;
@@ -89,8 +87,8 @@
 
     <div class="container">
         <header>
-            <h1>Dashboard de Proyectos de Inversión del Gobierno Nacional en Antioquia</h1>
-            <h2>Análisis interactivo por el Equipo UTL del Senador Leon Fredy Muñoz</h2>
+            <h1>Dashboard Equipo UTL <span class="highlight">Senador Leon Fredy Muñoz</span></h1>
+            <p>Análisis interactivo de proyectos y recursos</p>
         </header>
 
         <div id="loader" class="loader"></div>
