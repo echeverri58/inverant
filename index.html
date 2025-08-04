@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Inversión - Antioquia</title>
+    <title>Dashboard de Proyectos de Inversión</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
         :root {
-            --primary-color: #005A9C;
-            --secondary-color: #FFD700; /* Amarillo/Dorado Antioquia */
-            --background-color: #f4f7fc;
+            --primary-color: #28a745; /* Verde principal */
+            --secondary-color: #0056B3; /* Azul oscuro */
+            --background-color: #f0fdf4; /* Fondo verde muy claro */
             --card-bg-color: #ffffff;
-            --text-color: #333;
-            --light-text-color: #777;
+            --text-color: #212529;
+            --light-text-color: #6c757d;
             --border-radius: 8px;
             --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -37,12 +37,14 @@
         }
         header h1 {
             color: var(--primary-color);
+            font-size: 2.5em;
+            margin: 0 0 10px 0;
+        }
+        header h2 {
+            color: var(--secondary-color);
+            font-size: 1.5em;
             margin: 0;
         }
-        header h1 .highlight {
-            color: var(--secondary-color);
-        }
-        
         .filters {
             background-color: var(--card-bg-color);
             padding: 20px;
@@ -56,12 +58,12 @@
             flex-wrap: wrap;
         }
         .filter-group { display: flex; flex-direction: column; }
-        .filter-group label { font-weight: bold; margin-bottom: 5px; color: var(--primary-color); }
+        .filter-group label { font-weight: bold; margin-bottom: 5px; color: var(--secondary-color); }
         .filter-group select { padding: 10px; border-radius: var(--border-radius); border: 1px solid #ccc; min-width: 200px; }
         .summary-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .card { background-color: var(--card-bg-color); padding: 25px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); text-align: center; transition: transform 0.2s; }
         .card:hover { transform: translateY(-5px); }
-        .card h3 { margin: 0 0 10px 0; color: var(--primary-color); font-size: 1.1em; }
+        .card h3 { margin: 0 0 10px 0; color: var(--secondary-color); font-size: 1.1em; }
         .card .value { font-size: 2.2em; font-weight: bold; color: var(--text-color); }
         .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px; margin-bottom: 30px; }
         .chart-container { background-color: var(--card-bg-color); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--box-shadow); }
@@ -87,8 +89,8 @@
 
     <div class="container">
         <header>
-            <h1>📊 Dashboard de Inversión en <span class="highlight">Antioquia</span></h1>
-            <p>Análisis interactivo de proyectos y recursos</p>
+            <h1>Dashboard de Proyectos de Inversión del Gobierno Nacional en Antioquia</h1>
+            <h2>Análisis interactivo por el Equipo UTL del Senador Leon Fredy Muñoz</h2>
         </header>
 
         <div id="loader" class="loader"></div>
@@ -159,7 +161,7 @@
     <script>
         let originalData = [];
         let investmentBySectorChart, projectsByStatusChart;
-        const csvFilePath = 'Inversion antioquia- tiempoCS.csv'; // La ruta al archivo CSV
+        const csvFilePath = 'Inversion antioquia- tiempoCS.csv';
 
         document.addEventListener('DOMContentLoaded', () => {
             const loader = document.getElementById('loader');
@@ -168,9 +170,8 @@
             loader.style.display = 'block';
             dashboardContent.style.display = 'none';
 
-            // Fetch the CSV file directly
             Papa.parse(csvFilePath, {
-                download: true, // This is key to fetch from a URL
+                download: true,
                 header: true,
                 delimiter: ";",
                 skipEmptyLines: true,
@@ -284,7 +285,7 @@
                         labels: investmentBySectorData.labels,
                         datasets: [{
                             label: 'Inversión por Sector', data: investmentBySectorData.values,
-                            backgroundColor: '#005A9C', borderColor: '#004170', borderWidth: 1
+                            backgroundColor: var(--primary-color), borderColor: var(--primary-color), borderWidth: 1
                         }]
                     },
                     options: { responsive: true, maintainAspectRatio: false,
@@ -311,7 +312,7 @@
                     data: {
                         labels: projectsByStatusData.labels,
                         datasets: [{ label: 'Proyectos por Estado', data: projectsByStatusData.values,
-                            backgroundColor: ['#28a745', '#ffc107', '#007bff', '#dc3545', '#6c757d', '#17a2b8', '#343a40']
+                            backgroundColor: ['#28a745', '#007bff', '#ffc107', '#dc3545', '#6c757d', '#17a2b8', '#343a40']
                         }]
                     },
                     options: { responsive: true, maintainAspectRatio: false,
