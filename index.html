@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Inversión del gobierno nacinoal en Antioquia </title>
+    <title>Dashboard de Inversión del gobierno nacional en Antioquia</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
     <style>
@@ -107,6 +107,12 @@
                         <option value="all">Todos los Estados</option>
                     </select>
                 </div>
+                <div class="filter-group">
+                    <label for="bank-filter">Filtrar por Banco</label>
+                    <select id="bank-filter">
+                        <option value="all">Todos los Bancos</option>
+                    </select>
+                </div>
             </section>
             
             <section class="summary-cards">
@@ -148,6 +154,7 @@
                             <th>Estado</th>
                             <th>Horizonte</th>
                             <th>Valor Total (COP)</th>
+                            <th>Banco</th>
                         </tr>
                     </thead>
                     <tbody id="project-table-body"></tbody>
@@ -159,7 +166,7 @@
     <script>
         let originalData = [];
         let investmentBySectorChart, projectsByStatusChart;
-        const csvFilePath = 'Inversion antioquia- tiempoCS.csv'; // La ruta al archivo CSV
+        const csvFilePath = 'Inversion antioquia- tiempoCS.csv';
 
         document.addEventListener('DOMContentLoaded', () => {
             const loader = document.getElementById('loader');
@@ -168,9 +175,8 @@
             loader.style.display = 'block';
             dashboardContent.style.display = 'none';
 
-            // Fetch the CSV file directly
             Papa.parse(csvFilePath, {
-                download: true, // This is key to fetch from a URL
+                download: true,
                 header: true,
                 delimiter: ";",
                 skipEmptyLines: true,
@@ -201,6 +207,7 @@
             initializeDashboard(data);
             document.getElementById('sector-filter').addEventListener('change', updateDashboard);
             document.getElementById('status-filter').addEventListener('change', updateDashboard);
+            document.getElementById('bank-filter').addEventListener('change', updateDashboard); // Evento para el nuevo filtro
         }
         
         function formatCurrency(value) {
@@ -212,6 +219,7 @@
         function populateFilters(data) {
             const sectors = [...new Set(data.map(item => item.Sector).filter(Boolean))].sort();
             const statuses = [...new Set(data.map(item => item.Estado).filter(Boolean))].sort();
+            const banks = [...new Set(data.map(item => item.Banco).filter(Boolean))].sort(); // Se obtienen los valores únicos de 'Banco'
             
             const sectorFilter = document.getElementById('sector-filter');
             sectorFilter.innerHTML = '<option value="all">Todos los Sectores</option>';
@@ -230,6 +238,15 @@
                 option.textContent = status;
                 statusFilter.appendChild(option);
             });
+
+            const bankFilter = document.getElementById('bank-filter');
+            bankFilter.innerHTML = '<option value="all">Todos los Bancos</option>';
+            banks.forEach(bank => {
+                const option = document.createElement('option');
+                option.value = bank;
+                option.textContent = bank;
+                bankFilter.appendChild(option);
+            });
         }
 
         function initializeDashboard(data) {
@@ -241,6 +258,7 @@
         function updateDashboard() {
             const selectedSector = document.getElementById('sector-filter').value;
             const selectedStatus = document.getElementById('status-filter').value;
+            const selectedBank = document.getElementById('bank-filter').value; // Se obtiene el valor del nuevo filtro
 
             let filteredData = originalData;
             if (selectedSector !== 'all') {
@@ -248,6 +266,10 @@
             }
             if (selectedStatus !== 'all') {
                 filteredData = filteredData.filter(d => d.Estado === selectedStatus);
+            }
+            // Lógica para filtrar por banco
+            if (selectedBank !== 'all') {
+                filteredData = filteredData.filter(d => d.Banco === selectedBank);
             }
 
             updateSummaryCards(filteredData);
@@ -347,6 +369,7 @@
                     <td>${item.Estado || ''}</td>
                     <td>${item.Horizonte || ''}</td>
                     <td>${formatCurrency(item['Valor Total'] || 0)}</td>
+                    <td>${item.Banco || ''}</td>
                 `;
                 tableBody.appendChild(row);
             });
